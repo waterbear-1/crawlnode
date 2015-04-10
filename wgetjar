@@ -1,0 +1,1 @@
+wget http://192.168.3.161:7080/nexus/content/repositories/releases/com/gecpp/service/crawl-node/2.0.$1/crawl-node-2.0.$1-onejar.jar 

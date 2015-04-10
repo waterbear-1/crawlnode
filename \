@@ -1,1 +1,0 @@
-java -jar crawl-node-2.0.$1-onejar.jar  profile=system.properties

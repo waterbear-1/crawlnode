@@ -3,7 +3,7 @@ FROM java:8
 
 
 
-RUN git clone https://github.com/waterbear-1/crawlnode.git  /home/xuping/crawl;
+RUN git clone https://github.com/waterbear-1/crawlnode.git  /home/zuaa/crawl;
 
 
 CMD ["java","-jar","/home/zuaa/crawl/crawl-onejar.jar","profile=/home/zuaa/crawl/system.properties"]

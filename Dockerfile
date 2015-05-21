@@ -23,17 +23,17 @@ RUN update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-8-oracl
 ENV JAVA_HOME /usr/lib/jvm/java-8-oracle/
 
 # Install tomcat7  
-RUN cd /tmp && curl -L 'http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz' | tar -xz
+RUN cd /tmp && curl -L 'http://ftp.riken.jp/net/apache/tomcat/tomcat-8/v8.0.22/bin/apache-tomcat-8.0.22.tar.gz' | tar -xz
 RUN mkdir -p /opt/tomcat8
-RUN mv /tmp/apache-tomcat-8.0.21 /opt/tomcat8
-#ENV CATALINA_HOME /opt/tomcat8/apache-tomcat-8.0.21  
+RUN mv /tmp/apache-tomcat-8.0.22 /opt/tomcat8
+#ENV CATALINA_HOME /opt/tomcat8/apache-tomcat-8.0.22 
 #ENV PATH $PATH:$CATALINA_HOME/bin  
 
 #ADD tomcat8 /etc/init.d/tomcat8  
 #RUN chmod 755 /etc/init.d/tomcat8  
-RUN chmod +x /opt/tomcat8/apache-tomcat-8.0.21/bin/
+RUN chmod +x /opt/tomcat8/apache-tomcat-8.0.22/bin/
 # Expose ports.  
 EXPOSE 8080
-ENV PATH /opt/tomcat8/apache-tomcat-8.0.21/bin/:$PATH
+ENV PATH /opt/tomcat8/apache-tomcat-8.0.22/bin/:$PATH
 # Define default command.  
 CMD startup.sh

@@ -1,14 +1,39 @@
-FROM java:8
-#ENV JARHOST  http://113.106.92.165/crawl-node-$JARVERSION-onejar.jar 
+FROM ubuntu:14.10
 
+# Pull base image  
 
+MAINTAINER zuaa "zuaa@163.com"
 
-RUN git clone https://github.com/waterbear-1/crawlnode.git  /home/zuaa/crawl;
+# update source  
+RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe"> /etc/apt/sources.list
+RUN apt-get update
 
+# Install curl  
+RUN apt-get -y install curl
 
-CMD ["java","-jar","/home/zuaa/crawl/crawl-onejar.jar","profile=/home/zuaa/crawl/system.properties"]
+# Install JDK 8 
+RUN cd /tmp &&  curl -L 'https://edelivery.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie; gpw_e24=Dockerfile' | tar -xz
+RUN mkdir -p /usr/lib/jvm
+RUN mv /tmp/jdk1.8.0_45/ /usr/lib/jvm/java-8-oracle/
 
+# Set Oracle JDK 8 as default Java  
+RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-oracle/bin/java 300
+RUN update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-8-oracle/bin/javac 300
 
+ENV JAVA_HOME /usr/lib/jvm/java-8-oracle/
 
+# Install tomcat7  
+RUN cd /tmp && curl -L 'http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz' | tar -xz
+RUN mkdir -p /opt/tomcat8
+RUN mv /tmp/apache-tomcat-8.0.21 /opt/tomcat8
+#ENV CATALINA_HOME /opt/tomcat8/apache-tomcat-8.0.21  
+#ENV PATH $PATH:$CATALINA_HOME/bin  
 
-
+#ADD tomcat8 /etc/init.d/tomcat8  
+#RUN chmod 755 /etc/init.d/tomcat8  
+RUN chmod +x /opt/tomcat8/apache-tomcat-8.0.21/bin/
+# Expose ports.  
+EXPOSE 8080
+ENV PATH /opt/tomcat8/apache-tomcat-8.0.21/bin/:$PATH
+# Define default command.  
+CMD startup.sh

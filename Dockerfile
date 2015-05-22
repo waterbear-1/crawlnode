@@ -1,39 +1,18 @@
 FROM ubuntu:14.10
 
-# Pull base image  
-
-MAINTAINER zuaa "zuaa@163.com"
-
-# update source  
-RUN echo "deb http://archive.ubuntu.com/ubuntu precise main universe"> /etc/apt/sources.list
-RUN apt-get update
-
-# Install curl  
-RUN apt-get -y install curl
-
-# Install JDK 8 
-RUN cd /tmp &&  curl -L 'https://edelivery.oracle.com/otn-pub/java/jdk/8u45-b14/jdk-8u45-linux-x64.tar.gz' -H 'Cookie: oraclelicense=accept-securebackup-cookie; gpw_e24=Dockerfile' | tar -xz
-RUN mkdir -p /usr/lib/jvm
-RUN mv /tmp/jdk1.8.0_45/ /usr/lib/jvm/java-8-oracle/
-
-# Set Oracle JDK 8 as default Java  
-RUN update-alternatives --install /usr/bin/java java /usr/lib/jvm/java-8-oracle/bin/java 300
-RUN update-alternatives --install /usr/bin/javac javac /usr/lib/jvm/java-8-oracle/bin/javac 300
-
-ENV JAVA_HOME /usr/lib/jvm/java-8-oracle/
-
-# Install tomcat7  
-RUN cd /tmp && curl -L 'http://mirrors.hust.edu.cn/apache/tomcat/tomcat-8/v8.0.21/bin/apache-tomcat-8.0.21.tar.gz' | tar -xz
-RUN mkdir -p /opt/tomcat8
-RUN mv /tmp/apache-tomcat-8.0.21 /opt/tomcat8
-#ENV CATALINA_HOME /opt/tomcat8/apache-tomcat-8.0.21  
-#ENV PATH $PATH:$CATALINA_HOME/bin  
-
-#ADD tomcat8 /etc/init.d/tomcat8  
-#RUN chmod 755 /etc/init.d/tomcat8  
-RUN chmod +x /opt/tomcat8/apache-tomcat-8.0.21/bin/
-# Expose ports.  
-EXPOSE 8080
-ENV PATH /opt/tomcat8/apache-tomcat-8.0.21/bin/:$PATH
-# Define default command.  
+ 
+MAINTAINER zuaa "zuaa@163.com"  
+RUN apt-get install -y  wget unzip
+#get tomcat
+RUN mkdir  /opt/tomcat8 -p && cd /opt/tomcat8 &&   wget http://113.106.92.171/tomcat8.zip && unzip tomcat8.zip
+#get jdk
+RUN mkdir  /opt/jdk -p  && cd /opt/jdk &&   wget http://113.106.92.171/jdk8.zip && unzip jdk8.zip
+#get war
+RUN cd /opt/tomcat8/webapps/ && wget  http://113.106.92.171/crawl-node-web-1.0.0.zip && mv crawl-node-web-1.0.0.zip  crawl.war
+ENV PATH /opt/tomcat8/bin/:$PATH  
+ENV JAVA_HOME /opt/jdk/jdk1.8.0_20/
+ENV PATH /opt/jdk/jdk1.8.0_20/bin/:$PATH
+RUN chmod +x /opt/tomcat8/bin/*  
+RUN chmod +x /opt/jdk/jdk1.8.0_20/bin/*  
+EXPOSE 8080  
 CMD startup.sh
